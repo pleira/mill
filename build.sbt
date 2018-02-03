@@ -141,7 +141,8 @@ def genTask(m: Project) = Def.task{
       genTask(moduledefs).value ++
       genTask(core).value ++
       genTask(scalalib).value ++
-      genTask(scalajslib).value
+      genTask(scalajslib).value ++
+      genTask(twirllib).value
     ).mkString(",")
   )
 }
@@ -150,6 +151,15 @@ lazy val scalajslib = project
   .settings(
     sharedSettings,
     name := "mill-scalajslib",
+    fork in Test := true,
+    baseDirectory in Test := (baseDirectory in Test).value / ".."
+  )
+
+lazy val twirllib = project
+  .dependsOn(scalalib % "compile->compile;test->test")
+  .settings(
+    sharedSettings,
+    name := "mill-twirllib",
     fork in Test := true,
     baseDirectory in Test := (baseDirectory in Test).value / ".."
   )
